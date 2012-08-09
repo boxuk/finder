@@ -16,10 +16,7 @@
     => [" select * from users "])
 
 (fact
-  (binding [finder.core/*comparer* "or"]
-    (find-where :baz {:a 1 :b 2})
-      => [" select * from baz where (a = ? or b = ?) " 1 2])
-  (find-where :baz {:a 1 :b 2})
+  (find-where :baz {:a  :b 2})
     => [" select * from baz where (a = ? and b = ?) " 1 2])
 
 (fact
