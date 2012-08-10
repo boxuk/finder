@@ -11,12 +11,12 @@ To use Finder just import the library and use it inside your query.
 
 ```clojure
 (ns my.namespace
-  (use finder.core)
-  (require [clojure.java.jdbc :as sql]))
+  (require [clojure.java.jdbc :as sql]
+           [finder.core :as f]))
 
 (sql/with-connection cnn
   (sql/with-query-results res
-    (find-by-id :users 1)))
+    (f/by-id :users 1)))
 ```
 
 And/Or
@@ -25,14 +25,25 @@ And/Or
 By default clauses are and'd together...
 
 ```clojure
-(find-where :users {:name "foo" :email "blah"})
+(f/where :users {:name "foo"
+                 :email "blah"})
 ```
 
 But you can specify or'd groups just by using a vector..
 
 ```clojure
-(find-where :users [{:last_name "bar"}
-                    {:first_name "foo"}])
+(f/where :users [{:last_name "bar"}
+                 {:first_name "foo"}])
+```
+
+Functions
+---------
+
+```clojure
+(f/where TABLE PARAM_MAP)
+(f/by TABLE FIELD ID)
+(f/by-id TABLE ID)
+(f/all TABLE)
 ```
 
 Unit Tests

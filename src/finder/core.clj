@@ -46,7 +46,7 @@
 
 ;; Public
 
-(defn find-where
+(defn where
   "Find all records from table matching params"
   [tbl params]
   (let [where (get-where params)
@@ -55,18 +55,18 @@
     (apply vector
       (concat [sql] args))))
 
-(defn find-by
+(defn by
   "Find records matching single field"
   [tbl fld id]
-  (find-where tbl (hash-map fld id)))
+  (where tbl (hash-map fld id)))
 
-(defn find-by-id
+(defn by-id
   "Find on a table by id column"
   [tbl id]
-  (find-by tbl "id" id))
+  (by tbl "id" id))
 
-(defn find-all
+(defn all
   "Does a find all on a table"
   [tbl]
-  (find-where tbl {}))
+  (where tbl {}))
 
