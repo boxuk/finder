@@ -34,3 +34,17 @@
   (f/where :baz {} {:order {:a :desc :b :asc}})
     => [" select * from baz order by a desc, b asc "])
 
+(facts "about limiting/offsetting queries"
+
+  (f/where :baz {} {:limit 10})
+    => [" select * from baz limit 10 "]
+       
+  (f/where :baz {} {:offset 10})
+    => [" select * from baz offset 10 "]
+                    
+  (f/where :baz {} {:limit 5 :offset 6})
+    => [" select * from baz limit 5 offset 6 "]
+
+  (f/where :baz {} {:offset 6 :limit 5})
+    => [" select * from baz limit 5 offset 6 "])
+

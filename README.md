@@ -60,6 +60,20 @@ You can also do SQL 'in' clauses using a vector.
 
 Which will create _id in (1 2 3)_
 
+Order/Limit/Offset
+------------------
+
+The third argument to _where_ allows you to specify extra options
+like ordering results, limiting, and offsetting.
+
+```clojure
+(f/where :users {} {:order :name})
+(f/where :users {} {:order {:name asc :email :desc}
+                    :limit 10})
+(f/where :emails {:user_id 1}
+                 {:limit 20
+                  :offset 10})
+```
 Functions
 ---------
 
