@@ -2,14 +2,25 @@
 (ns finder.core
   (require [clojure.string :as string]))
 
+(defn- to-where-clause
+  "Formats a where clause part"
+  [[fld op]]
+  (format "%s %s ?" fld op))
+
+(defn- to-where-parts
+  "Breaks where parts down to name/op vector pairs"
+  [[fld value]]
+  (let [op (if (vector? value) "in" "=")]
+    (vector (name fld) op)))
+          
 (defn- to-where-group 
   "Takes a where group, joins them with ANDs"
   [params]
   (format "(%s)"
     (string/join " and "
       (->> params
-           (map (comp name first))
-           (map #(format "%s = ?" %))))))
+           (map to-where-parts)
+           (map to-where-clause)))))
 
 (defn- to-where-params 
   "Takes a bunch of param groups, joins them with ORs"

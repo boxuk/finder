@@ -23,3 +23,7 @@
   (f/where :baz [{:a 1 :b 2} {:c 3}])
     => [" select * from baz where (a = ? and b = ?) or (c = ?) " 1 2 3])
 
+(fact
+  (f/where :baz [{:a [1 2 3] :b 4}])
+    => [" select * from baz where (a in ? and b = ?) " [1 2 3] 4])
+

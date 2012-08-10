@@ -38,6 +38,17 @@ But you can specify or'd groups just by using a vector..
                  {:first_name "foo"}])
 ```
 
+Multiple Values
+---------------
+
+You can also do SQL 'in' clauses using a vector.
+
+```clojure
+(f/where :users {:id [1 2 3]}
+```
+
+Which will create _id in (1 2 3)_
+
 Functions
 ---------
 
