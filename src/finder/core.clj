@@ -55,16 +55,43 @@
   (flatten
     (reduce to-param [] params)))
 
+(defn- to-order-clause
+  "Returns a single order clause"
+  [[col dir]]
+  (format "%s %s" (name col)
+                  (name dir)))
+
+(defn- get-order
+  "Returns the clauses in an order statement"
+  [order]
+  (let [orders (if (map? order)
+                   order 
+                   (hash-map order :desc))]
+    (string/join ", "
+      (map to-order-clause orders))))
+
+(defn- get-options
+  "Return order part of query"
+  [opts]
+  (if-let [order (:order opts)]
+    (format " order by %s" (get-order order))
+    ""))
+
+(defn- query
+  [tbl params options]
+  (let [where (get-where params)
+        args (get-params params)
+        opts (get-options options)
+        sql (format " select * from %s%s%s " (name tbl) where opts)]
+    (apply vector
+      (concat [sql] args))))
+
 ;; Public
 
 (defn where
   "Find all records from table matching params"
-  [tbl params]
-  (let [where (get-where params)
-        args (get-params params)
-        sql (format " select * from %s%s " (name tbl) where)]
-    (apply vector
-      (concat [sql] args))))
+  ([tbl params] (where tbl params {}))
+  ([tbl params opts] (query tbl params opts)))
 
 (defn by
   "Find records matching single field"
