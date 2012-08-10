@@ -2,25 +2,24 @@
 (ns finder.core
   (require [clojure.string :as string]))
 
+(declare to-where-params)
+
 (defn- to-where-clause
   "Formats a where clause part"
-  [[fld op]]
-  (format "%s %s ?" fld op))
-
-(defn- to-where-parts
-  "Breaks where parts down to name/op vector pairs"
   [[fld value]]
-  (let [op (if (vector? value) "in" "=")]
-    (vector (name fld) op)))
-          
+  (let [fld-name (name fld)]
+    (if (vector? value)
+        (format "(%s)"
+          (to-where-params
+            (map (partial hash-map fld-name) value)))
+        (format "%s = ?" fld-name))))
+
 (defn- to-where-group 
   "Takes a where group, joins them with ANDs"
   [params]
   (format "(%s)"
     (string/join " and "
-      (->> params
-           (map to-where-parts)
-           (map to-where-clause)))))
+      (map to-where-clause params))))
 
 (defn- to-where-params 
   "Takes a bunch of param groups, joins them with ORs"
@@ -53,7 +52,8 @@
 (defn- get-params
   "Fetch all the parameter values"
   [params]
-  (reduce to-param [] params))
+  (flatten
+    (reduce to-param [] params)))
 
 ;; Public
 

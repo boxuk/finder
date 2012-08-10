@@ -21,6 +21,17 @@ To use Finder just import the library and use it inside your query.
     (f/by-id :users 1)))
 ```
 
+Installation
+------------
+
+You can install Finder with Leiningen and Clojars.
+
+```
+[sql-finder "0.0.2"]
+```
+
+See Clojars for latest version number.
+
 And/Or
 ------
 
