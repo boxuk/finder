@@ -23,8 +23,8 @@
 
 (defn by
   "Find records matching single field"
-  [tbl fld id]
-  (where tbl (hash-map fld id)))
+  ([tbl fld id] (by tbl fld id {}))
+  ([tbl fld id opts] (where tbl (hash-map fld id) opts)))
 
 (defn by-id
   "Find on a table by id column"
@@ -33,6 +33,6 @@
 
 (defn all
   "Does a find all on a table"
-  [tbl]
-  (where tbl {}))
+  ([tbl] (all tbl {}))
+  ([tbl opts] (where tbl {} opts)))
 

@@ -48,3 +48,14 @@
   (f/where :baz {} {:offset 6 :limit 5})
     => [" select * from baz limit 5 offset 6 "])
 
+(facts "about passing options"
+
+  (f/by :bar :name "boo" {:offset 2})
+    => [" select * from bar where (name = ?) offset 2 " "boo"]
+
+  (f/all :foo {:limit 10})
+    => [" select * from foo limit 10 "])
+
+;(facts "about using comparators"
+;       )
+
