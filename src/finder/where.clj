@@ -4,15 +4,27 @@
 
 (declare to-where-params)
 
+(defn- to-where-groups 
+  "Takes some parameters and makes sure they're in groups"
+  [params]
+  (if (vector? params) params
+      (vector params)))
+
+(defn- to-where-in
+  [fld value]
+  (format "(%s)"
+    (to-where-params
+      (map (partial hash-map fld) value))))
+
 (defn- to-where-clause
   "Formats a where clause part"
   [[fld value]]
-  (let [fld-name (name fld)]
-    (if (vector? value)
-        (format "(%s)"
-          (to-where-params
-            (map (partial hash-map fld-name) value)))
-        (format "%s = ?" fld-name))))
+  (let [operator (if (vector? value)
+                     (first value)
+                     "=")]
+    (if (set? value)
+        (to-where-in fld value)
+        (format "%s %s ?" (name fld) operator))))
 
 (defn- to-where-group 
   "Takes a where group, joins them with ANDs"
@@ -27,12 +39,6 @@
   (string/join " or "
     (map to-where-group groups)))
 
-(defn- to-where-groups 
-  "Takes some parameters and makes sure they're in groups"
-  [params]
-  (if (vector? params) params
-      (vector params)))
-
 ;; Public
 
 (defn get-where
@@ -43,5 +49,4 @@
               (->> params
                    (to-where-groups)
                    (to-where-params)))))
-
 

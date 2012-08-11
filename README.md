@@ -52,13 +52,15 @@ But you can specify or'd groups just by using a vector..
 Multiple Values
 ---------------
 
-You can also do SQL 'in' clauses using a vector.
+You can also do SQL 'in' clauses using a set.
 
 ```clojure
-(f/where :users {:id [1 2 3]}
+(f/where :users {:id #{1 2 3}}
 ```
 
-Which will create _id in (1 2 3)_
+Which will create _id in (1 2 3)_ (the _in_ operator isn't actually
+supported by JDBC prepared statements, so its appoximated by Finder
+just using a series of comparisons).
 
 Order/Limit/Offset
 ------------------
@@ -74,14 +76,25 @@ like ordering results, limiting, and offsetting.
                  {:limit 20
                   :offset 10})
 ```
-Functions
----------
+
+Custom Comparators
+------------------
+
+By default field values are matched with =, but you can specify
+another operator if you like using a vector.
 
 ```clojure
-(f/where TABLE PARAM_MAP)
-(f/by TABLE FIELD ID)
+(f/where :users {:age ['< 50]})
+```
+
+Function API
+------------
+
+```clojure
+(f/where TABLE PARAM_MAP OPTS)
+(f/by TABLE FIELD ID OPTS)
 (f/by-id TABLE ID)
-(f/all TABLE)
+(f/all TABLE OPTS)
 ```
 
 Unit Tests
