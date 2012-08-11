@@ -9,6 +9,7 @@
                   (name dir)))
 
 (defn- get-order
+  "Return the order-by clause"
   [order]
   (let [orders (if (map? order) order 
                    (hash-map order :desc))]
@@ -16,15 +17,8 @@
       (string/join ", "
         (map to-order-clause orders)))))
 
-(defn- get-limit
-  [limit] 
-  (format " limit %d" limit))
-
-(defn- get-offset
-  [offset]
-  (format " offset %d" offset))
-
-(defn to-option
+(defn- to-option
+  "If an option is present, passes its value to the func"
   [opts [opt func]]
   (if-let [data (get opts opt)]
     (func data) ""))
@@ -34,9 +28,10 @@
 (defn get-options
   "Return options part of query"
   [opts]
-  (string/join ""
-    (map (partial to-option opts)
-         {:order get-order
-          :limit get-limit
-          :offset get-offset})))
+  (let [clause #(format " %s %d" %1 %2)]
+    (string/join ""
+      (map (partial to-option opts)         
+           {:order get-order
+            :limit (partial clause "limit")
+            :offset (partial clause "offset")}))))
 
