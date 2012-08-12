@@ -39,7 +39,7 @@
 ;; Public
 ;; ------
 
-(defn ^{:doc "Fetch there 'where' sql clause and return it as a string."}
+(defn ^{:doc "Fetch the 'where' sql clause and return it as a string."}
   get-where [params]
   (let [to-vector #(if (vector? %) % (vector %))]
     (if (empty? params) ""
