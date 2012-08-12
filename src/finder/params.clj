@@ -12,13 +12,6 @@
     (vector? value) (second value)
     :else value))
 
-(defn- ^{:doc "Used to reduce a collection of groups to its values. Maps over
-  the collection to reduce it to a structure which can later be flattened to
-  give the ordered parameters."}
-  to-params [acc param]
-  (concat acc
-    (map to-param param)))
-
 ;; Public
 ;; ------
 
@@ -27,7 +20,8 @@
   vector of the parameters as they are specified."}
   get-params [params]
   (let [param-vec (if (vector? params) params
-                      (vector params))]
+                      (vector params))
+        to-params #(concat %1 (map to-param %2))]
     (flatten
       (reduce to-params [] param-vec))))
 

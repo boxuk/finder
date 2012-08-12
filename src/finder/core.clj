@@ -24,17 +24,17 @@
 ;; The API consists mainly of the 'where' function, with a few others that provide
 ;; a slightly more meaningful syntax for particular queries, like finding by an ID.
 ;;
-;; The general structure for the funtions is to take a table name, a series of
+;; The general structure for the functions is to take a table name, a series of
 ;; parameters as the second argument, and then some options like ordering for the
 ;; last parameter.
 
 (defn ^{:doc "Find all records from table matching the parameters.  The parameters should be
-  a map or vector of maps."}
+  a map or vector of maps. Last argument is the options map."}
   where
   ([tbl params] (where tbl params {}))
   ([tbl params opts] (query tbl params opts)))
 
-(defn ^{:doc "Find records matching single field and value. Can also take query options for
+(defn ^{:doc "Find records matching a single field and value. Can also take query options for
   order, limit and offset."}
   by
   ([tbl fld id] (by tbl fld id {}))

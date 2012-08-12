@@ -6,11 +6,6 @@
 
 (declare to-where-params)
 
-(defn- ^{:doc "Takes some parameters and makes sure they're in groups"}
-  to-where-groups [params]
-  (if (vector? params) params
-      (vector params)))
-
 (defn- ^{:doc "Creates a pseudo 'where in' clause using a series of comparisons for
   each value instead (JDBC driver does not support binding values to 'in')"}
   to-where-in [fld value]
@@ -18,34 +13,36 @@
     (to-where-params
       (map (partial hash-map fld) value))))
 
-(defn- ^{:doc "Formats a single where clause part with a bound parameter. ie. 'name = ?'"}
-  to-where-clause [[fld value]]
+(defn- ^{:doc "Formats a single where clause, using = as the default operator, or
+  the one specified by the value vector. eg. ['< 12]"}
+  to-where [fld value]
   (let [operator (if (vector? value)
                      (first value)
                      "=")]
-    (if (set? value)
-        (to-where-in fld value)
-        (format "%s %s ?" (name fld) operator))))
+    (format "%s %s ?" (name fld) operator)))
 
-(defn- ^{:doc "Takes a where group, joins them with ANDs"}
-  to-where-group [params]
-  (format "(%s)"
-    (string/join " and "
-      (map to-where-clause params))))
+(defn- ^{:doc "Formats a single where clause part, which could either be a single
+  fld/value parameter, or a 'where in' clause using a set."} 
+  to-where-clause [[fld value]]
+    (cond
+      (set? value) (to-where-in fld value)
+      :else (to-where fld value)))
 
-(defn- ^{:doc "Takes a bunch of param groups, joins them with ORs"}
+(defn- ^{:doc "Takes a bunch of param groups, joins them with ORs."}
   to-where-params [groups]
-  (string/join " or "
-    (map to-where-group groups)))
+  (let [to-group #(format "(%s)"
+                   (string/join " and "
+                     (map to-where-clause %)))]
+    (string/join " or "
+      (map to-group groups))))
 
 ;; Public
 ;; ------
 
-(defn ^{:doc "Fetch there 'where' sql clause"}
+(defn ^{:doc "Fetch there 'where' sql clause and return it as a string."}
   get-where [params]
-  (if (empty? params) ""
-      (format " where %s"
-              (->> params
-                   (to-where-groups)
-                   (to-where-params)))))
+  (let [to-vector #(if (vector? %) % (vector %))]
+    (if (empty? params) ""
+        (format " where %s"
+                (to-where-params (to-vector params))))))
 

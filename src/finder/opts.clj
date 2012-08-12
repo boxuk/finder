@@ -9,7 +9,7 @@
   (format "%s %s" (name col)
                   (name dir)))
 
-(defn- ^{:doc "Takes an order by column, or series or columns and builds the order by
+(defn- ^{:doc "Takes an order by column, or series of columns and builds the order by
   statement as a string to return."}
   get-order [order]
   (let [orders (if (map? order) order 
@@ -27,7 +27,7 @@
 ;; Public
 ;; ------
 
-(defn ^{:doc "Takes the 'options' map or information about ordering, limit and offset.  Then returns
+(defn ^{:doc "Takes the 'options' map of information about ordering, limit and offset.  Then returns
   a string for those parts of the SQL query, in the correct order."}
   get-options [opts]
   (let [clause #(format " %s %d" %1 %2)]
