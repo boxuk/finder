@@ -9,7 +9,7 @@
 
 (defn- ^{:doc "Query wraps up all the query building and is called by the main
   API functions.  It takes a table name, some parameters, and some options.  Then
-  Returns a vector that can be used in a JDBC query."}
+  returns a vector that can be used in a JDBC query."}
   query [tbl params options]
   (let [where (where/get-where params)
         args (params/get-params params)
