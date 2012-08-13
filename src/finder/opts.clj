@@ -1,42 +1,39 @@
 
-(ns finder.opts
+(ns ^{:doc "This namespace deals with the query options like order, limit and offset"}
+  finder.opts
   (:require [clojure.string :as string]))
 
-(defn- to-order-clause
-  "Returns a single order clause"
-  [[col dir]]
+(defn- ^{:doc "Destructures a name/value vector and returns a single order clause as
+  a string.  ie. 'name desc'"}
+  to-order-clause [[col dir]]
   (format "%s %s" (name col)
                   (name dir)))
 
-(defn- get-order
-  [order]
+(defn- ^{:doc "Takes an order by column, or series of columns and builds the order by
+  statement as a string to return."}
+  get-order [order]
   (let [orders (if (map? order) order 
                    (hash-map order :desc))]
     (str " order by "
       (string/join ", "
         (map to-order-clause orders)))))
 
-(defn- get-limit
-  [limit] 
-  (format " limit %d" limit))
-
-(defn- get-offset
-  [offset]
-  (format " offset %d" offset))
-
-(defn to-option
-  [opts [opt func]]
+(defn- ^{:doc "Checks the options data to see if an option is present, and if it is
+  then passes it to its handler function, returning the result."}
+  to-option [opts [opt func]]
   (if-let [data (get opts opt)]
     (func data) ""))
 
 ;; Public
+;; ------
 
-(defn get-options
-  "Return options part of query"
-  [opts]
-  (string/join ""
-    (map (partial to-option opts)
-         {:order get-order
-          :limit get-limit
-          :offset get-offset})))
+(defn ^{:doc "Takes the 'options' map of information about ordering, limit and offset.  Then returns
+  a string for those parts of the SQL query, in the correct order."}
+  get-options [opts]
+  (let [clause #(format " %s %d" %1 %2)]
+    (string/join ""
+      (map (partial to-option opts)         
+           {:order get-order
+            :limit (partial clause "limit")
+            :offset (partial clause "offset")}))))
 
