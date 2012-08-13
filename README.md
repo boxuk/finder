@@ -4,7 +4,8 @@
 Finder
 ======
 
-Finder is a simple tool for creating query data for clojure.java.jdbc.
+Finder is a simple tool for creating query data for clojure.java.jdbc.  There is
+[Marginalia documentation](http://boxuk.github.com/finder/) available.
 
 Usage
 -----
