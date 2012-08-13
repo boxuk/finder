@@ -20,7 +20,7 @@
   (f/where :baz [{:a 1 :b 2} {:c 3}])
     => [" select * from baz where (a = ? and b = ?) or (c = ?) " 1 2 3]
 
-  (f/where :baz [{:a [1 2 3] :b 4}])
+  (f/where :baz [{:a #{1 2 3} :b 4}])
     => [" select * from baz where (((a = ?) or (a = ?) or (a = ?)) and b = ?) " 1 2 3 4])
 
 (facts "about ordering results"
@@ -47,4 +47,17 @@
 
   (f/where :baz {} {:offset 6 :limit 5})
     => [" select * from baz limit 5 offset 6 "])
+
+(facts "about passing options"
+
+  (f/by :bar :name "boo" {:offset 2})
+    => [" select * from bar where (name = ?) offset 2 " "boo"]
+
+  (f/all :foo {:limit 10})
+    => [" select * from foo limit 10 "])
+
+(facts "about using comparators"
+
+  (f/where :foo {:age ['< 50]})
+    => [" select * from foo where (age < ?) " 50])
 
