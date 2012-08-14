@@ -63,6 +63,11 @@ Which will create _id in (1 2 3)_ (the _in_ operator isn't actually
 supported by JDBC prepared statements, so its appoximated by Finder
 just using a series of comparisons).
 
+Finder tries to do what you _probably mean_ when it comes to empty
+sets.  So doing _{:id #{}}_ will translate to _(1 = 0)_ (ie. not
+matching anything, rather than it being ommitted and matching
+everything instead).
+
 Order/Limit/Offset
 ------------------
 

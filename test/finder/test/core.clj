@@ -14,6 +14,9 @@
   (f/all :users)
     => [" select * from users "]
 
+  (f/where :baz {:a #{}})
+    => [" select * from baz where (1 = 0) "]
+
   (f/where :baz {:a 1 :b 2})
     => [" select * from baz where (a = ? and b = ?) " 1 2]
 

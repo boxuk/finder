@@ -9,9 +9,10 @@
 (defn- ^{:doc "Creates a pseudo 'where in' clause using a series of comparisons for
   each value instead (JDBC driver does not support binding values to 'in')"}
   to-where-in [fld value]
-  (format "(%s)"
-    (to-where-params
-      (map (partial hash-map fld) value))))
+  (if (empty? value) "1 = 0"
+      (format "(%s)"
+        (to-where-params
+          (map (partial hash-map fld) value)))))
 
 (defn- ^{:doc "Formats a single where clause, using = as the default operator, or
   the one specified by the value vector. eg. ['< 12]"}
