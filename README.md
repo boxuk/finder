@@ -25,10 +25,10 @@ To use Finder just import the library and use it inside your query.
 Installation
 ------------
 
-You can install Finder with Leiningen and Clojars.
+You can install Finder with Leiningen and [Clojars](https://clojars.org/boxuk/finder).
 
 ```
-[sql-finder "0.0.2"]
+[sql-finder "x.x.x"]
 ```
 
 See Clojars for latest version number.

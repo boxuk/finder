@@ -1,5 +1,5 @@
 
-(defproject sql-finder "1.0.1"
+(defproject boxuk/finder "1.1.0"
   :description "Simple library for create clojure.java.jdbc queries"
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [midje "1.4.0"]]
